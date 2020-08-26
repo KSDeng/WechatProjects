@@ -10,7 +10,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    images: []
   },
 
   // 云数据库
@@ -134,6 +134,95 @@ Page({
       console.log(error);
     });
     
+  },
+
+  // 上传图片
+  uploadPicture: function(options) {
+    wx.chooseImage({
+      count: 1,   // 最大选择的图片张数
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      success(res) {
+        const tempFilePaths = res.tempFilePaths;
+        console.log(tempFilePaths);
+
+        // 上传图片
+        wx.cloud.uploadFile({
+          // cloudPath: 上传至云端的路径
+          // 文件名称若重复会将原有数据覆盖
+          cloudPath: new Date().getTime() + '.png',
+          filePath: tempFilePaths[0],           // 小程序临时文件路径
+          success: res => {
+            // 返回文件 ID
+            console.log(res.fileID);
+
+            // 将文件ID存入云数据库
+            db.collection('images').add({
+              data: {
+                fileID: res.fileID
+              }
+            }).then(res => {
+              console.log(res);
+            }).catch(error => {
+              console.log(error);
+            });
+
+          },
+          fail: console.error
+        });
+
+      },
+      fail(error) {
+        console.log(error);
+      }
+    });
+
+  },
+
+  // 文件展示
+  showPicture: function(options) {
+    wx.cloud.callFunction({
+      name: 'login',
+    }).then(res => {
+      db.collection('images').where({
+        _openid: res.result.openid
+      }).get().then(res2 => {
+        console.log(res2);
+        this.setData({
+          images: res2.data
+        });
+
+      }).catch(error => {
+        console.log(error);
+      });
+
+    }).catch(error => {
+      console.log(error);
+    });
+  },
+
+  downloadPicture: function(event) {
+
+    // 这里fileID是通过"data-"的方法从button传入的
+    wx.cloud.downloadFile({
+      fileID: event.target.dataset.fileid,  // 文件 ID
+      success: res => {
+        // 返回临时文件路径
+        console.log(res.tempFilePath);
+
+        // 将图片保存到本地相册
+        wx.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success(res) { 
+            wx.showToast({
+              title: '保存成功'
+            });
+          }
+        });
+
+      },
+      fail: console.error
+    })
   },
 
   /**
