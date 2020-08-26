@@ -1,2 +1,5 @@
 <!--miniprogram/pages/movie/movie.wxml-->
 <text>miniprogram/pages/movie/movie.wxml</text>
+<van-button type="danger">危险按钮</van-button>
+
+<van-button loading type="info" loading-text="加载中..." />

@@ -1,24 +1,30 @@
 {
   "pages": [
     "pages/movie/movie",
-    "pages/user/user"
+    "pages/profile/profile"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
-    "navigationBarTextStyle": "black"
+    "navigationBarBackgroundColor": "#E54847",
+    "navigationBarTitleText": "最新电影",
+    "navigationBarTextStyle": "white"
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2",
   "tabBar": {
+    "color": "#000",
+    "selectedColor": "#E54847",
     "list": [{
       "pagePath": "pages/movie/movie",
-      "text": "电影"
+      "text": "电影",
+      "iconPath": "images/movie.png",
+      "selectedIconPath": "images/movie-active.png"
     },{
-      "pagePath": "pages/user/user",
-      "text": "我的"
+      "pagePath": "pages/profile/profile",
+      "text": "我的",
+      "iconPath": "images/Profile.png",
+      "selectedIconPath": "images/Profile-active.png"
     }]
   }
 }
